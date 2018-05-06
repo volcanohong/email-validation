@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
+import './AppConstants'
+import * as AppConstant from './AppConstants';
 
 class App extends Component {
   constructor(props){
@@ -17,10 +19,10 @@ class App extends Component {
         let lastAtPos = email.lastIndexOf('@');
         if (lastAtPos < 0) return this.error("missing '@'");
         let domainPart = email.substr(lastAtPos + 1);
-        let domainRegExp = new RegExp("^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9])).([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}.[a-zA-Z]{2,3})$");
+        let domainRegExp = new RegExp(AppConstant.PATTERN_DOMAIN);
         if (!domainRegExp.test(domainPart)) return this.error("invalid domain name");
         let namePart = email.substr(0, lastAtPos);
-        let nameRegExp = new RegExp("^[-a-z0-9~!$%^&*_=+}{'?]+(.[-a-z0-9~!$%^&*_=+}{'?]+)*$");
+        let nameRegExp = new RegExp(AppConstant.PATTERN_NAME);
         if (!nameRegExp.test(namePart)) return this.error("is it a typo?");
     }
     return true;
