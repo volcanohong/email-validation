@@ -50,13 +50,12 @@ class App extends Component {
   handleKeyPress(e) {
       this.setState({email: e.target.value});
       let keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
-      let protectedKeyCodes = [8, 9, 17, 18, 35, 36, 37, 38, 39, 40, 45];
-      if (protectedKeyCodes.indexOf(keyCode) >= 0) {
+      if (AppConstant.KEYCODE_PROTECTED.indexOf(keyCode) >= 0) {
         return;
       }
-      e.preventDefault();
+      // e.preventDefault();
 
-      alert(keyCode);
+      console.log(String.fromCharCode(keyCode));
   }
 
   render() {
@@ -66,8 +65,7 @@ class App extends Component {
           <div>
               <label>Email</label>
               <input name="email" type="text" id="email" value={this.state.email} placeholder="Please input valid email"
-              onChange={this.handleChange} onKeyPress={this.handleKeyPress}
-              />
+              onChange={this.handleChange} onKeyPress={this.handleKeyPress} />
               <span style={{color: "red"}}>{this.state.error}</span>
           </div>
         </form>
