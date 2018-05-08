@@ -14,7 +14,7 @@ class Knode {
     }
 }
 
-class Trie {
+export class Trie {
     private root: Knode;
 
     constructor() {
