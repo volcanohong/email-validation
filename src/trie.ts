@@ -45,14 +45,14 @@ export class Trie {
 
     public getWordsByPrefix(str: string) {
         if (!this.root || !str) return [];
-        let node = this._getNode(this.root, str, 0);
-        if (!node) {
-            let words = [];
-            this._getWords(node, words, str);
-            return words;
-        } else {
-            return [];
-        }
+        let words = [];
+        this._getWordsByPrefix(this.root, words, '', str);
+        return words;
+    }
+
+    public getNode(node, word, idx) {
+        if (idx === word.length - 1) return node.children[word.charAt(idx)];
+        else return this.getNode(node.children[word.charAt(idx)], word, ++idx);
     }
 
     private _add(node, word) {
@@ -97,7 +97,7 @@ export class Trie {
         let letter = word.charAt(0);
         let child = node.children[letter];
         if (child) {
-            var remainder = word.substring(1);
+            let remainder = word.substring(1);
             if (!remainder && child.isWord) {
                 return true;
             } else {
@@ -121,9 +121,15 @@ export class Trie {
         }
     }
 
-    private _getNode(node, word, idx) {
-        if (idx === word.length - 1) return node.children[word.charAt(idx)];
-        else return this._getNode(node.children[word.charAt(idx)], word, ++idx);
+    private _getWordsByPrefix(node, words, word, str) {
+        if (!node) return;
+        let len = word.length;
+        if (len < str.length) {
+            word += str.charAt(len);
+            this._getWordsByPrefix(node.children[str.charAt(len)], words, word, str);
+        } else {
+            this._getWords(node, words, word);
+        }
     }
 }
 

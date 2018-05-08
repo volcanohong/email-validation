@@ -1,6 +1,6 @@
 import {Trie} from './trie';
 
-let emails = ['gmail.com', 'yahoo.com', 'google.com'];
+let emails = ['gmail', 'yahoo', 'gmabcd', 'gmtest'];
 let trie;
 
 beforeEach(() => {
@@ -20,8 +20,7 @@ test("remove words", function () {
 });
 
 test("get words by prefix", function () {
-    let words = trie.getWordsByPrefix('g');
-    expect(words.length).toBe(emails.length - 1);
+    expect(trie.getWordsByPrefix('gm').length).toBe(emails.length - 1);
 });
 
 
