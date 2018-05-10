@@ -8,6 +8,7 @@ import {EMAIL_PROVIDERS} from "./AppConstants";
 class App extends Component {
 
     dict = new Trie();
+    len = null;
 
     constructor(props) {
         super(props);
@@ -54,29 +55,50 @@ class App extends Component {
     }
 
     handleKeyPress(e) {
-        // this.setState({email: e.target.value});
         let keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
         if (AppConstant.KEYCODE_PROTECTED.indexOf(keyCode) >= 0) return;
 
-        let atPos = e.target.value.indexOf('@');
-        if (atPos < 0) return;
-        let input = document.getElementById('email');
-        let start = e.target.selectionStart;
-        let name = e.target.value.substring(0, atPos + 1);
-        let prefix = e.target.value.substring(atPos + 1, start) + String.fromCharCode(keyCode);
-        let words = this.dict.getWordsByPrefix(prefix);
+        let target = e.target;
+        this.len = target.value.length;
+        let start = target.selectionStart;
+        let end = target.selectionEnd;
+        let atPos = target.value.indexOf('@');
+        if (atPos < 0 && keyCode !== 64) return; //@=64
+        let prefix = target.value.substring(atPos + 1, start) + String.fromCharCode(keyCode);
+        if (keyCode === 64) prefix = '';
 
         e.preventDefault();
+        if (/^(13|44|59)$/.test("" + keyCode)) {
+            e.target.selectionStart = end + (target.value.length - this.len);
+            e.target.selectionEnd = end + (target.value.length - this.len);
+
+            if (this.validation()) {
+                this.setState({error: ""});
+            }
+            return;
+        }
+
+        //replace selection with input
+        e.target.value = target.value.substr(0, start) + String.fromCharCode(keyCode) + target.value.substr(end, target.value.length);
+        this.len = target.value.length - this.len;
+
+        //move selection
+        e.target.selectionStart = ++start;
+        e.target.selectionEnd = end + this.len;
+
+        let words = [];
+        if (keyCode === 64) words = this.dict.getWords();
+        else words = this.dict.getWordsByPrefix(prefix);
 
         if (words.length > 0) {
-            if (prefix.length === words[0].length) return;
-            input.value = name + words[0];
-            setTimeout(function () {
-                input.setSelectionRange(start + 1, start + words[0].length);
-            }, 0);
-        } else {
-            input.value = name + prefix;
+            let subStr = words[0].substr(prefix.length, words[0].length);
+            e.target.value = target.value.substr(0, start) + subStr + target.value.substr(start, target.value.length);
+            // highlight auto complete
+            e.target.selectionStart = start;
+            e.target.selectionEnd = start + subStr.length;
         }
+
+        this.setState({email: e.target.value});
     }
 
     render() {
@@ -95,4 +117,5 @@ class App extends Component {
         );
     }
 }
+
 export default App;
