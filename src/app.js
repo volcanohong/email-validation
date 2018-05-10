@@ -72,26 +72,26 @@ class App extends Component {
 
     validation() {
         let email = this.state.email;
-        if (!email) return this.error("email cannot be empty");
-        if (typeof email !== "undefined") {
+        if (!email) return this.error(AppConstant.ERR_NOT_EMPTY);
+        if (typeof email !== undefined) {
             let lastAtPos = email.lastIndexOf('@');
             let lastDotPos = email.lastIndexOf('.');
-            if (lastAtPos < 0) return this.error("missing '@'");
+            if (lastAtPos < 0) return this.error(AppConstant.ERR_MISSING_AT);
             let domainPart = email.substr(lastAtPos + 1);
             let domainRegExp = new RegExp(AppConstant.PATTERN_DOMAIN);
-            if (!domainRegExp.test(domainPart)) return this.error("invalid domain name");
-            if (lastDotPos < lastAtPos) return this.error("missing '.' in domain");
+            if (!domainRegExp.test(domainPart)) return this.error(AppConstant.INVALID_DOMAIN);
+            if (lastDotPos < lastAtPos) return this.error(AppConstant.ERR_MISSING_DOT);
             let namePart = email.substr(0, lastAtPos);
             let nameRegExp = new RegExp(AppConstant.PATTERN_NAME);
-            if (namePart.length === 0) return this.error("missing name part");
-            if (!nameRegExp.test(namePart)) return this.error("is it a typo?");
+            if (namePart.length === 0) return this.error(AppConstant.ERR_MISSING_NAME);
+            if (!nameRegExp.test(namePart)) return this.error(AppConstant.ERR_IS_TYPO);
         }
         return true;
     }
 
     error(msg) {
         console.log(msg);
-        this.setState({error: "Invalid email: " + msg});
+        this.setState({error: AppConstant.INVALID_EMAIL + ": " + msg});
         return false;
     }
 
@@ -102,7 +102,6 @@ class App extends Component {
                     <div>
                         <label>Email</label>
                         <input name="email" type="text" id="email" value={this.state.email}
-                               placeholder="Please input valid email"
                                onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
                         <span id="error" style={{color: "red"}}>{this.state.error}</span>
                     </div>

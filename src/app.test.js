@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './app';
 import Enzyme, {shallow, render, mount} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import * as AppConstant from './constants';
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -46,7 +47,7 @@ describe('<App />', () => {
         expect(wrapper.find('input').props().onKeyPress).toBeDefined();
     });
 
-    it('should update state when a value is input', () => {
+    it('onChange: should update state input is changed', () => {
         const email = 'any@gmail.com';
         const input = wrapper.find('input');
         input.simulate('change', {
@@ -58,13 +59,13 @@ describe('<App />', () => {
         expect(wrapper.state().email).toBe(email);
     });
 
-    it('should show an error when email is not correct', () => {
+    it('onKeyPress: should show an error when email is not correct', () => {
         const email = 'any@';
         const input = wrapper.find('input');
         input.simulate('keypress', { preventDefault(){}, key: 'enter', keyCode: 13, which: 13, target: {
             name: 'email',
             value: email,
         }});
-        expect(wrapper.state().error).toContain('Invalid email');
+        expect(wrapper.state().error).toContain(AppConstant.INVALID_EMAIL);
     });
 });
