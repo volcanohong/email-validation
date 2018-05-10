@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import './App.css';
-import './AppConstants'
+import './app.css';
+import './constants'
 import {Trie} from './trie';
-import * as AppConstant from './AppConstants';
-import {EMAIL_PROVIDERS} from "./AppConstants";
+import * as AppConstant from './constants';
+import {EMAIL_PROVIDERS} from "./constants";
 
 class App extends Component {
 
