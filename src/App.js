@@ -70,7 +70,7 @@ class App extends Component {
         this.setState({email: e.target.value});
     }
 
-    private validation() {
+    validation() {
         let email = this.state.email;
         if (!email) return this.error("email cannot be empty");
         if (typeof email !== "undefined") {
@@ -89,7 +89,7 @@ class App extends Component {
         return true;
     }
 
-    private error(msg) {
+    error(msg) {
         console.log(msg);
         this.setState({error: "Invalid email: " + msg});
         return false;
