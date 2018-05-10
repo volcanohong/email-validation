@@ -104,7 +104,7 @@ class App extends Component {
                         <input name="email" type="text" id="email" value={this.state.email}
                                placeholder="Please input valid email"
                                onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
-                        <span style={{color: "red"}}>{this.state.error}</span>
+                        <span id="error" style={{color: "red"}}>{this.state.error}</span>
                     </div>
                 </form>
             </div>

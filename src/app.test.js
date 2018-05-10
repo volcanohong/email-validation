@@ -1,9 +1,70 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app';
+import Enzyme, {shallow, render, mount} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-it('renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<App/>, div);
-    ReactDOM.unmountComponentAtNode(div);
+Enzyme.configure({adapter: new Adapter()});
+
+describe('<App />', () => {
+
+    let props, wrapper;
+
+    beforeEach(() => {
+        props = {
+            handleSubmit: () => {
+            },
+            handleChange: () => {
+            },
+            handleKeyPress: () => {
+            }
+        };
+        wrapper = shallow(<App {...props} />);
+    });
+
+    it('renders without crashing', () => {
+        const div = document.createElement('div');
+        ReactDOM.render(<App/>, div);
+        ReactDOM.unmountComponentAtNode(div);
+    });
+
+    it("should have form, input and span", () => {
+        expect(wrapper.find('form').length).toEqual(1);
+        expect(wrapper.find('input').length).toEqual(1);
+        expect(wrapper.find('span').length).toEqual(1);
+    });
+
+    it("should start with empty email and error", () => {
+        const email = wrapper.state().email;
+        expect(email).toEqual("");
+        const error = wrapper.state().error;
+        expect(error).toEqual("");
+    });
+
+    it('`<input>` element should have an onChange, onKeyPress attribute', () => {
+        expect(wrapper.find('input').props().onChange).toBeDefined();
+        expect(wrapper.find('input').props().onKeyPress).toBeDefined();
+    });
+
+    it('should update state when a value is input', () => {
+        const email = 'any@gmail.com';
+        const input = wrapper.find('input');
+        input.simulate('change', {
+            target: {
+                name: 'email',
+                value: email,
+            }
+        });
+        expect(wrapper.state().email).toBe(email);
+    });
+
+    it('should show an error when email is not correct', () => {
+        const email = 'any@';
+        const input = wrapper.find('input');
+        input.simulate('keypress', { preventDefault(){}, key: 'enter', keyCode: 13, which: 13, target: {
+            name: 'email',
+            value: email,
+        }});
+        expect(wrapper.state().error).toContain('Invalid email');
+    });
 });
