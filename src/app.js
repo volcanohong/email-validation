@@ -7,10 +7,11 @@ import {EMAIL_PROVIDERS} from "./constants";
 
 class App extends Component {
 
-    dict = new Trie();
-    len = null;
+    dict = new Trie(); //auto-complete emails dict. trie
+    len = null; //input string length
 
     constructor(props) {
+        console.log('app init...');
         super(props);
         this.state = {email: '', error: ''};
         this.handleChange = this.handleChange.bind(this);
@@ -20,17 +21,19 @@ class App extends Component {
     }
 
     handleChange(e) {
+        console.log('input change...');
         this.setState({email: e.target.value});
     }
 
     handleSubmit(e) {
+        console.log('submit...');
         e.preventDefault();
         if (this.validation() && this.deliverable()) this.setState({error: ""});
     }
 
-
     handleKeyPress(e) {
         let keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+        console.log('key press... ' + keyCode);
         if (AppConstant.KEYCODE_PROTECTED.indexOf(keyCode) >= 0) return;
         let target = e.target;
         this.len = target.value.length;
@@ -71,6 +74,7 @@ class App extends Component {
 
     validation() {
         let email = this.state.email;
+        console.log('validate: ' + email);
         if (!email) return this.error(AppConstant.ERR_NOT_EMPTY);
         if (typeof email !== undefined) {
             let lastAtPos = email.lastIndexOf('@');
@@ -89,15 +93,18 @@ class App extends Component {
     }
 
     deliverable() {
-        let url = AppConstant.EMAIL_VERIFY_API_URL + "?email=" + this.state.email + "&apikey=" + AppConstant.EMAIL_VERIFY_API_KEY;
-
+        console.log('deliverable: ' + this.state.email);
+        let url = AppConstant.EMAIL_VERIFY_API_URL + "?email=" + encodeURI(this.state.email) + "&apikey=" + AppConstant.EMAIL_VERIFY_API_KEY;
         //using mode: "no-cors" will get an opaque response, which doesn't seem to return data in the body.
         fetch(url, {method: 'GET', mode: "no-cors", headers: { Accept: 'application/json'}})
             .then(res => {
                 console.log(res);
                 if(res.status === 200) return res.json();
             })
-            .then(json => {/**do something**/})
+            .then(json => {
+                /**do something**/
+                console.log('You are using Kickbox\'s sandbox API: all email => "result":"deliverable"');
+            })
             .catch(error => console.error('Error:', error));
         return true;
     }
