@@ -13,10 +13,11 @@ class App extends Component {
     constructor(props) {
         console.log('app init...');
         super(props);
-        this.state = {email: '', error: ''};
+        this.state = {email: '', error: '', isActive: false};
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onFocus = this.onFocus.bind(this);
         EMAIL_PROVIDERS.forEach(email => this.dict.add(email));
     }
 
@@ -73,6 +74,12 @@ class App extends Component {
         this.setState({email: e.target.value});
     }
 
+    onFocus(e) {
+        let form = e.target.parentElement;
+        form.className += ' active';
+        form.blur();
+    }
+
     validation() {
         let email = this.state.email;
         console.log('validate: ' + email);
@@ -97,10 +104,10 @@ class App extends Component {
         console.log('deliverable: ' + this.state.email);
         let url = AppConstant.EMAIL_VERIFY_API_URL + "?email=" + encodeURI(this.state.email) + "&apikey=" + AppConstant.EMAIL_VERIFY_API_KEY;
         //using mode: "no-cors" will get an opaque response, which doesn't seem to return data in the body.
-        fetch(url, {method: 'GET', mode: "no-cors", headers: { Accept: 'application/json'}})
+        fetch(url, {method: 'GET', mode: "no-cors", headers: {Accept: 'application/json'}})
             .then(res => {
                 console.log(res);
-                if(res.status === 200) return res.json();
+                if (res.status === 200) return res.json();
             })
             .then(json => {
                 /**do something**/
@@ -118,12 +125,15 @@ class App extends Component {
 
     render() {
         return (
-            <div className="app">
+            <div className="form-box">
+                <div className="head">Email Validation</div>
                 <form id="form" onSubmit={this.handleSubmit}>
-                    <div>
-                        <label>Email</label>
-                        <input name="email" type="text" id="email" value={this.state.email}
-                               onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
+                    <div className="form-group">
+                        <label className="label-control">
+                            <span className="label-text">Email</span>
+                        </label>
+                        <input className="form-control" name="email" type="text" id="email" value={this.state.email}
+                               onChange={this.handleChange} onKeyPress={this.handleKeyPress} onFocus={this.onFocus}/>
                         <span id="error" style={{color: "red"}}>{this.state.error}</span>
                     </div>
                 </form>
