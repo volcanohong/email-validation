@@ -25,10 +25,9 @@ class App extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        if (this.validation()) {
-            this.setState({error: ""});
-        }
+        if (this.validation() && this.deliverable()) this.setState({error: ""});
     }
+
 
     handleKeyPress(e) {
         let keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
@@ -46,7 +45,7 @@ class App extends Component {
         if (/^(13|44|59)$/.test("" + keyCode)) {
             e.target.selectionStart = end + (target.value.length - this.len);
             e.target.selectionEnd = end + (target.value.length - this.len);
-            if (this.validation()) this.setState({error: ""});
+            if (this.validation() && this.deliverable()) this.setState({error: ""});
             return;
         }
         //replace selection with input
@@ -86,6 +85,20 @@ class App extends Component {
             if (namePart.length === 0) return this.error(AppConstant.ERR_MISSING_NAME);
             if (!nameRegExp.test(namePart)) return this.error(AppConstant.ERR_IS_TYPO);
         }
+        return true;
+    }
+
+    deliverable() {
+        let url = AppConstant.EMAIL_VERIFY_API_URL + "?email=" + this.state.email + "&apikey=" + AppConstant.EMAIL_VERIFY_API_KEY;
+
+        //using mode: "no-cors" will get an opaque response, which doesn't seem to return data in the body.
+        fetch(url, {method: 'GET', mode: "no-cors", headers: { Accept: 'application/json'}})
+            .then(res => {
+                console.log(res);
+                if(res.status === 200) return res.json();
+            })
+            .then(json => {/**do something**/})
+            .catch(error => console.error('Error:', error));
         return true;
     }
 
