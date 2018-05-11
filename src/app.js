@@ -28,6 +28,7 @@ class App extends Component {
     handleSubmit(e) {
         console.log('submit...');
         e.preventDefault();
+        this.setState({email: e.target.value}); //for test
         if (this.validation() && this.deliverable()) this.setState({error: ""});
     }
 
