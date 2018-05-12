@@ -37,7 +37,7 @@ describe('<App />', () => {
     it("should have form, input and span", () => {
         expect(wrapper.find('form').length).toEqual(1);
         expect(wrapper.find('input').length).toEqual(1);
-        expect(wrapper.find('span').length).toEqual(1);
+        expect(wrapper.find('span').length).toEqual(3);
     });
 
     it("should start with empty email and error", () => {
