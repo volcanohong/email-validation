@@ -157,3 +157,7 @@ form#form {
         opacity: 1;
     }
 }
+
+.copyright {
+    font-size: 12px;
+}

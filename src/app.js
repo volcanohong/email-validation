@@ -132,7 +132,9 @@ class App extends Component {
     render() {
         return (
             <div className="form-box">
-                <div className="head">Email Validation</div>
+                <div className="head">Email Validation
+                    <p className="copyright"> © Hong Zhang</p>
+                </div>
                 <form id="form" onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label className="label-control">
