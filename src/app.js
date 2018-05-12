@@ -13,11 +13,12 @@ class App extends Component {
     constructor(props) {
         console.log('app init...');
         super(props);
-        this.state = {email: '', error: '', isActive: false};
+        this.state = {email: '', error: ''};
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onFocus = this.onFocus.bind(this);
+        this.onBlur = this.onBlur.bind(this);
         EMAIL_PROVIDERS.forEach(email => this.dict.add(email));
     }
 
@@ -80,6 +81,13 @@ class App extends Component {
         form.blur();
     }
 
+    onBlur(e) {
+        if (this.state.email === '') {
+            e.target.parentElement.className = 'form-group';
+            this.setState({error: ''});
+        }
+    }
+
     validation() {
         let email = this.state.email;
         console.log('validate: ' + email);
@@ -133,9 +141,10 @@ class App extends Component {
                             <span className="label-text">Email</span>
                         </label>
                         <input className="form-control" name="email" type="text" id="email" value={this.state.email}
-                               onChange={this.handleChange} onKeyPress={this.handleKeyPress} onFocus={this.onFocus}/>
-                        <span id="error" style={{color: "red"}}>{this.state.error}</span>
+                               onChange={this.handleChange} onKeyPress={this.handleKeyPress} onFocus={this.onFocus}
+                               onBlur={this.onBlur}/>
                     </div>
+                    <span id="error" style={{color: "red", fontSize: '0.8em'}}>{this.state.error}</span>
                 </form>
             </div>
         );
