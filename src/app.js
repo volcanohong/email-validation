@@ -13,7 +13,7 @@ class App extends Component {
     constructor(props) {
         console.log('app init...');
         super(props);
-        this.state = {email: '', error: ''};
+        this.state = {email: '', error: '', validate: false};
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,14 +24,14 @@ class App extends Component {
 
     handleChange(e) {
         console.log('input change...');
-        this.setState({email: e.target.value});
+        this.setState({email: e.target.value, validate: false});
     }
 
     handleSubmit(e) {
         console.log('submit...');
         e.preventDefault();
         this.setState({email: e.target.value}); //for test
-        if (this.validation() && this.deliverable()) this.setState({error: ""});
+        if (this.validation() && this.deliverable()) this.setState({error: "", validate: true});
     }
 
     handleKeyPress(e) {
@@ -51,7 +51,7 @@ class App extends Component {
         if (/^(13|44|59)$/.test("" + keyCode)) {
             e.target.selectionStart = end + (target.value.length - this.len);
             e.target.selectionEnd = end + (target.value.length - this.len);
-            if (this.validation() && this.deliverable()) this.setState({error: ""});
+            if (this.validation() && this.deliverable()) this.setState({error: "", validate: true});
             return;
         }
         //replace selection with input
@@ -139,12 +139,13 @@ class App extends Component {
                     <div className="form-group">
                         <label className="label-control">
                             <span className="label-text">Email</span>
+                            <span className="label-text check-mark" hidden={!this.state.validate}>&#10004;</span>
                         </label>
                         <input className="form-control" name="email" type="text" id="email" value={this.state.email}
                                onChange={this.handleChange} onKeyPress={this.handleKeyPress} onFocus={this.onFocus}
                                onBlur={this.onBlur}/>
                     </div>
-                    <span id="error" style={{color: "red", fontSize: '0.8em'}}>{this.state.error}</span>
+                    <span id="error" className="error">{this.state.error}</span>
                 </form>
             </div>
         );
