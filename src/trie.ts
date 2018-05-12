@@ -1,3 +1,4 @@
+//Trie algorithm for words match
 class Knode {
     private data: string;
     private prefix: number;
