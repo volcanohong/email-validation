@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import './app.css';
-import './constants'
-import {Trie} from './trie';
 import * as AppConstant from './constants';
-import {EMAIL_PROVIDERS} from "./constants";
+import {Trie} from './trie';
+import './app.css';
 
 class App extends Component {
 
@@ -19,7 +17,7 @@ class App extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
-        EMAIL_PROVIDERS.forEach(email => this.dict.add(email));
+        AppConstant.EMAIL_PROVIDERS.forEach(email => this.dict.add(email));
     }
 
     handleChange(e) {
